@@ -167,6 +167,43 @@
   </div>
 </section>
 
+<section class="mt-16">
+  <div class="glow-border rounded-2xl p-6">
+    <h2 class="text-2xl font-bold neon mb-4">
+      Featured <span class="accent">Work</span>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="repo-card glow-border rounded-xl overflow-hidden">
+        <img
+          src="public/images/Screenshot 2026-02-24 112024.png"
+          class="w-full h-64 object-cover"
+        />
+        <div class="p-4 faint">
+          this is a screenshot of a project I help making last year in it is a map of the Kean Campus that 
+          shows where the buildings are and also has a search function to find specific buildings. 
+          I made this project with a team of 3 other people and we used a lot of different technologies to 
+          make it It was a fun project to work on and we learned a lot about web development and working with maps.
+        </div>
+      </div>
+
+      <div class="repo-card glow-border rounded-xl overflow-hidden">
+        <img
+          src="public/images/Screenshot 2026-02-24 123006.png"
+          class="w-full h-64 object-cover"
+        />
+        <div class="p-4 faint">
+          for this i had ai make 3 different browser extensions, and then i took the best features of each and combined 
+          them into one extension that is now being improved by only human hands. the ai made the original code 
+          but it was very buggy and not good at all, but it was a good starting point for me to 
+          learn how to make browser extensions and also to practice my debugging skills.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
     <footer class="mt-12 text-sm faint text-center">
       Data fetched from GitHub (client-side only receives public repo meta). Cache updates every 5 minutes on server.
     </footer>
@@ -249,17 +286,20 @@
   const closeBtn = document.getElementById('ai-close');
   const newJokeBtn = document.getElementById('new-joke');
 
-  function randomJoke() {
-    jokeText.textContent = jokes[Math.floor(Math.random() * jokes.length)];
+  async function randomJoke() {
+  jokeText.textContent = "Compiling joke... 🤖";
+
+  try {
+    const res = await fetch(
+      "https://official-joke-api.appspot.com/jokes/programming/random"
+    );
+    const [data] = await res.json();
+    jokeText.textContent = `${data.setup} — ${data.punchline}`;
+  } catch {
+    jokeText.textContent =
+      "Joke delivery failed. Please reboot sense of humor.";
   }
-
-  toggleBtn.onclick = () => {
-    aiPopup.classList.toggle('hidden');
-    randomJoke();
-  };
-
-  closeBtn.onclick = () => aiPopup.classList.add('hidden');
-  newJokeBtn.onclick = randomJoke;
+}
 
   setTimeout(() => {
     aiPopup.classList.remove('hidden');
