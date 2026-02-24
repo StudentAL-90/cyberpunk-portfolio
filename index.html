@@ -233,79 +233,56 @@
 </button>
 
   <script>
-    async function loadRepos(){
-      const target = document.getElementById('projects');
-      const empty = document.getElementById('empty');
-      try {
-        const res = await fetch('/api/repos');
-        if (!res.ok) throw new Error('Failed to load repos');
-        const repos = await res.json();
-        if (!repos || repos.length === 0) {
-          empty.classList.remove('hidden');
-          return;
-        }
-        target.innerHTML = repos.map(r => `
-          <article class="repo-card glow-border p-5 rounded-2xl">
-            <div class="flex items-start justify-between">
-              <div>
-                <a href="${r.url}" target="_blank" class="text-lg font-semibold neon">${r.name}</a>
-                <p class="faint mt-2">${r.description || '<span class="faint">No description</span>'}</p>
-              </div>
-              <div class="text-right">
-                <div class="pill">${r.language || '—'}</div>
-                <div class="faint text-xs mt-2">Updated ${new Date(r.updated_at).toLocaleDateString()}</div>
-              </div>
-            </div>
-            <div class="mt-4 flex items-center justify-between text-sm faint">
-              <div>⭐ ${r.stars} • ⑂ ${r.forks}</div>
-              <div class="text-xs faint">ID ${r.id}</div>
-            </div>
-          </article>
-        `).join('');
-      } catch (err) {
-        console.error(err);
-        empty.textContent = 'Error loading repos.';
-        empty.classList.remove('hidden');
-      }
-    }
+  // Toggle AI popup
+  toggleBtn.onclick = () => {
+    aiPopup.classList.toggle('hidden');
+    randomJoke();
+  };
 
-    loadRepos();
-  </script>
-  <script>
-  const jokes = [
-    "Why do programmers prefer dark mode? Because light attracts bugs.",
-    "I told my neural network a joke… it overfit.",
-    "Why was the JavaScript developer sad? Because they didn’t know how to 'null' their feelings.",
-    "I tried to learn recursion, but I tried to learn recursion.",
-    "AI humor level: statistically insignificant but emotionally adequate."
-  ];
+  // Close popup
+  closeBtn.onclick = () => aiPopup.classList.add('hidden');
 
-  const aiPopup = document.getElementById('ai-joke');
+  // 🔥 NEW: get a fresh joke when button is clicked
+  newJokeBtn.onclick = randomJoke;
+</script>
+
+  <script>const aiPopup = document.getElementById('ai-joke');
   const jokeText = document.getElementById('joke-text');
   const toggleBtn = document.getElementById('ai-toggle');
   const closeBtn = document.getElementById('ai-close');
   const newJokeBtn = document.getElementById('new-joke');
 
   async function randomJoke() {
-  jokeText.textContent = "Compiling joke... 🤖";
+    jokeText.textContent = "Compiling joke... 🤖";
 
-  try {
-    const res = await fetch(
-      "https://official-joke-api.appspot.com/jokes/programming/random"
-    );
-    const [data] = await res.json();
-    jokeText.textContent = `${data.setup} — ${data.punchline}`;
-  } catch {
-    jokeText.textContent =
-      "Joke delivery failed. Please reboot sense of humor.";
+    try {
+      const res = await fetch(
+        "https://official-joke-api.appspot.com/jokes/programming/random"
+      );
+      const [data] = await res.json();
+      jokeText.textContent = `${data.setup} — ${data.punchline}`;
+    } catch {
+      jokeText.textContent =
+        "Joke delivery failed. Please reboot sense of humor.";
+    }
   }
-}
 
+  toggleBtn.onclick = () => {
+    aiPopup.classList.toggle('hidden');
+    randomJoke();
+  };
+
+  closeBtn.onclick = () => aiPopup.classList.add('hidden');
+
+  newJokeBtn.onclick = randomJoke;
+
+  // Auto-open once
   setTimeout(() => {
     aiPopup.classList.remove('hidden');
     randomJoke();
   }, 5000);
 </script>
+
 
 </body>
 </html>
