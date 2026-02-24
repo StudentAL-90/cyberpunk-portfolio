@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cyberpunk Portfolio</title>
+
+  <!-- Tailwind via CDN for quick prototyping -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --neon-pink: #ff2d95;
+      --neon-cyan: #00e6ff;
+      --bg: #0b0f14;
+      --card: rgba(10,12,20,0.6);
+    }
+    html,body{height:100%}
+    body{
+      background: radial-gradient(1000px 500px at 10% 10%, rgba(0,230,255,0.05), transparent 10%),
+                  radial-gradient(800px 500px at 90% 90%, rgba(255,45,149,0.03), transparent 10%),
+                  var(--bg);
+      color: #c7d2fe;
+      font-family: "JetBrains Mono", monospace;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .neon {
+      text-shadow:
+        0 0 6px rgba(255,255,255,0.06),
+        0 0 12px var(--neon-cyan),
+        0 0 24px rgba(0,230,255,0.06);
+    }
+
+    .glow-border {
+      border: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow:
+        0 2px 12px rgba(0,0,0,0.6),
+        0 0 16px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    .repo-card {
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .repo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 28px rgba(0,230,255,0.06);
+    }
+
+    .accent {
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px rgba(255,45,149,0.3);
+    }
+
+    .pill {
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      background: linear-gradient(90deg, rgba(255,45,149,0.08), rgba(0,230,255,0.03));
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .faint {
+      color: #94a3b8;
+      font-size: .9rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+  <div class="max-w-6xl w-full">
+    <header class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl font-bold neon">Alex — <span class="accent">portfolio</span></h1>
+          <p class="faint mt-1">Realtime list of projects from your GitHub account • cyberpunk theme</p>
+        </div>
+        <div class="text-right">
+          <div class="pill">Node · Express · Tailwind</div>
+        </div>
+      </div>
+    </header>
+    <section class="mb-10">
+  <div class="glow-border rounded-2xl p-6">
+    <h2 class="text-2xl font-bold neon mb-3">
+      About <span class="accent">Me</span>
+    </h2>
+
+    <p class="faint leading-relaxed max-w-3xl">
+      <!-- EDIT THIS -->
+      I am a Computer Science student with a passion for building fun projects and games. 
+      Currently I am on a browser extension project that was made by ai originaly
+       but also now being improved only by human hands.
+    </p>
+
+    <p class="faint leading-relaxed max-w-3xl mt-3">
+      This site showcases live projects pulled from GitHub, local experiments,
+      and a playable game built with HTML, JavaScript, and desktop frameworks
+      becuase the one made for this previous course could not be hosted here.
+    </p>
+
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="pill">JavaScript</span>
+      <span class="pill">Node.js</span>
+      <span class="pill">HTML / CSS</span>
+      <span class="pill">Game Logic</span>
+      <span class="pill">Desktop & Web</span>
+    </div>
+  </div>
+</section>
+
+    <main>
+      <section id="projects" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- repo cards injected here -->
+      </section>
+        <article class="repo-card glow-border p-5 rounded-2xl">
+  <h3 class="text-lg font-semibold neon">Blackjack</h3>
+  <p class="faint">Single-player Blackjack — runs entirely in your browser</p>
+
+  <iframe
+    src="public/games/index.html"
+    class="w-full h-[520px] mt-4 rounded-xl border border-white/5"
+    loading="lazy">
+  </iframe>
+
+  <a href="public/games/index.html" target="_blank"
+     class="accent text-sm mt-3 inline-block">
+    Play Fullscreen →
+  </a>
+</article>
+
+      <div id="empty" class="text-center faint mt-8 hidden">
+        No projects found — make sure your GitHub username is set on the server.
+      </div>
+    </main>
+    <section class="mt-16">
+  <div class="glow-border rounded-2xl p-6 text-center">
+    <h2 class="text-2xl font-bold neon mb-3">
+      Contact <span class="accent">Me</span>
+    </h2>
+
+    <p class="faint mb-6">
+      Interested in my work, collaborations, or opportunities?
+      Reach out through any of the channels below.
+    </p>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-4 text-sm">
+      <!-- EDIT THESE -->
+      <a href="mailto:your@email.com" class="accent hover:underline">
+        your@email.com
+      </a>
+
+      <a href="https://github.com/yourusername" target="_blank"
+         class="accent hover:underline">
+        GitHub
+      </a>
+
+      <a href="https://linkedin.com/in/yourusername" target="_blank"
+         class="accent hover:underline">
+        LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+    <footer class="mt-12 text-sm faint text-center">
+      Data fetched from GitHub (client-side only receives public repo meta). Cache updates every 5 minutes on server.
+    </footer>
+  </div>
+
+  <script>
+    async function loadRepos(){
+      const target = document.getElementById('projects');
+      const empty = document.getElementById('empty');
+      try {
+        const res = await fetch('/api/repos');
+        if (!res.ok) throw new Error('Failed to load repos');
+        const repos = await res.json();
+        if (!repos || repos.length === 0) {
+          empty.classList.remove('hidden');
+          return;
+        }
+        target.innerHTML = repos.map(r => `
+          <article class="repo-card glow-border p-5 rounded-2xl">
+            <div class="flex items-start justify-between">
+              <div>
+                <a href="${r.url}" target="_blank" class="text-lg font-semibold neon">${r.name}</a>
+                <p class="faint mt-2">${r.description || '<span class="faint">No description</span>'}</p>
+              </div>
+              <div class="text-right">
+                <div class="pill">${r.language || '—'}</div>
+                <div class="faint text-xs mt-2">Updated ${new Date(r.updated_at).toLocaleDateString()}</div>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-sm faint">
+              <div>⭐ ${r.stars} • ⑂ ${r.forks}</div>
+              <div class="text-xs faint">ID ${r.id}</div>
+            </div>
+          </article>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        empty.textContent = 'Error loading repos.';
+        empty.classList.remove('hidden');
+      }
+    }
+
+    loadRepos();
+  </script>
+</body>
+</html>

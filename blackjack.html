@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Blackjack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b5136;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .table {
+      background: #146c43;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .hand {
+      margin: 15px 0;
+    }
+
+    .cards {
+      margin-top: 8px;
+    }
+
+    .card {
+      display: inline-block;
+      padding: 6px 10px;
+      margin: 3px;
+      border-radius: 6px;
+      font-size: 18px;
+      background: #eee;
+      color: #000;
+    }
+
+    /* Subtle color differences */
+    .player .card { background: #0e0459; }
+    .dealer .card { background: #eb0d1f; }
+
+    .hidden {
+      background: #444 !important;
+      color: #444;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .hit { background: #ffc107; }
+    .stand { background: #dc3545; color: white; }
+    .new { background: #0d6efd; color: white; }
+
+    .status {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blackjack</h1>
+
+  <div class="table">
+    <div class="hand dealer">
+      <strong>Dealer</strong>
+      <div id="dealerCards" class="cards"></div>
+      <div id="dealerScore"></div>
+    </div>
+
+    <div class="hand player">
+      <strong>You</strong>
+      <div id="playerCards" class="cards"></div>
+      <div id="playerScore"></div>
+    </div>
+
+    <div>
+      <button class="hit" onclick="hit()">Hit</button>
+      <button class="stand" onclick="stand()">Stand</button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    const suits = ["♠", "♥", "♦", "♣"];
+    const values = [
+      { name: "A", value: 11 },
+      { name: "2", value: 2 },
+      { name: "3", value: 3 },
+      { name: "4", value: 4 },
+      { name: "5", value: 5 },
+      { name: "6", value: 6 },
+      { name: "7", value: 7 },
+      { name: "8", value: 8 },
+      { name: "9", value: 9 },
+      { name: "10", value: 10 },
+      { name: "J", value: 10 },
+      { name: "Q", value: 10 },
+      { name: "K", value: 10 }
+    ];
+
+    let deck, playerHand, dealerHand;
+    let gameOver = false;
+    let revealDealer = false;
+    let roundLock = false;
+
+    function createDeck() {
+      let d = [];
+      for (let suit of suits) {
+        for (let val of values) {
+          d.push({ name: val.name + suit, value: val.value });
+        }
+      }
+      return d.sort(() => Math.random() - 0.5);
+    }
+
+    function getScore(hand) {
+      let score = hand.reduce((s, c) => s + c.value, 0);
+      let aces = hand.filter(c => c.value === 11).length;
+      while (score > 21 && aces--) score -= 10;
+      return score;
+    }
+
+    function renderCards(container, hand, hideFirst = false) {
+      container.innerHTML = "";
+      hand.forEach((card, i) => {
+        const div = document.createElement("div");
+        div.className = "card";
+
+        if (hideFirst && i === 0 && !revealDealer) {
+          div.classList.add("hidden");
+          div.textContent = "🂠";
+        } else {
+          div.textContent = card.name;
+        }
+
+        container.appendChild(div);
+      });
+    }
+
+    function render() {
+      renderCards(playerCards, playerHand);
+      renderCards(dealerCards, dealerHand, true);
+
+      playerScore.textContent = "Score: " + getScore(playerHand);
+      dealerScore.textContent = revealDealer
+        ? "Score: " + getScore(dealerHand)
+        : "Score: ?";
+    }
+
+    function endGame(message) {
+      gameOver = true;
+      roundLock = true;
+      revealDealer = true;
+      status.textContent = message;
+      render();
+
+      setTimeout(newGame, 2000); // auto-start next round
+    }
+
+    function hit() {
+      if (gameOver || roundLock) return;
+      playerHand.push(deck.pop());
+      render();
+
+      if (getScore(playerHand) > 21) {
+        endGame("You busted! Dealer wins.");
+      }
+    }
+
+    function stand() {
+      if (gameOver || roundLock) return;
+      revealDealer = true;
+
+      while (getScore(dealerHand) < 17) {
+        dealerHand.push(deck.pop());
+      }
+
+      const p = getScore(playerHand);
+      const d = getScore(dealerHand);
+
+      if (d > 21) endGame("Dealer busted! You win!");
+      else if (d > p) endGame("Dealer wins.");
+      else if (d < p) endGame("You win!");
+      else endGame("Push (tie).");
+    }
+
+    function newGame() {
+      deck = createDeck();
+      playerHand = [deck.pop(), deck.pop()];
+      dealerHand = [deck.pop(), deck.pop()];
+      gameOver = false;
+      roundLock = false;
+      revealDealer = false;
+      status.textContent = "";
+      render();
+    }
+
+    newGame();
+  </script>
+</body>
+</html>
