@@ -209,79 +209,90 @@
     </footer>
   </div>
     <!-- AI Joke Assistant -->
-<div id="ai-joke"
-     class="fixed right-4 bottom-24 glow-border rounded-2xl p-4 w-72 hidden">
-  <div class="flex items-center justify-between mb-2">
-    <span class="text-sm neon font-semibold">AI Assistant</span>
-    <button id="ai-close" class="faint text-xs hover:accent">✕</button>
-  </div>
-
-  <p id="joke-text" class="faint text-sm leading-relaxed">
-    Initializing humor module...
-  </p>
-
-  <button id="new-joke"
-          class="mt-3 pill hover:brightness-125">
-    New joke
-  </button>
+<div class="flex items-center justify-between mb-2">
+  <span class="text-sm neon font-semibold">AI Assistant</span>
+  <button id="ai-close" class="faint text-xs hover:accent">✕</button>
 </div>
 
-<!-- AI Toggle Button -->
+<label for="joke-input" class="faint text-xs mb-1 block">
+  What kind of joke?
+</label>
 <button id="ai-toggle"
-        class="fixed right-4 bottom-6 pill glow-border hover:brightness-185">
+        class="fixed right-4 bottom-6 pill glow-border hover:brightness-125 z-50">
   🤖 AI
 </button>
 
+<input
+  id="joke-input"
+  type="text"
+  placeholder="e.g. programming, pun, dark"
+  class="w-full mb-2 px-3 py-1 rounded-lg bg-black/40 border border-white/10 text-sm text-cyan-200"
+/>
+
+
+<p id="joke-text" class="faint text-sm leading-relaxed min-h-[60px]">
+  Awaiting user humor request…
+</p>
+
+<button
+  id="new-joke"
+  class="mt-3 pill hover:brightness-125 w-full">
+  Generate Joke
+</button>
+
   <script>
-  // Toggle AI popup
-  toggleBtn.onclick = () => {
-    aiPopup.classList.toggle('hidden');
-    randomJoke();
-  };
-
-  // Close popup
-  closeBtn.onclick = () => aiPopup.classList.add('hidden');
-
-  // 🔥 NEW: get a fresh joke when button is clicked
-  newJokeBtn.onclick = randomJoke;
-</script>
-
-  <script>const aiPopup = document.getElementById('ai-joke');
+document.addEventListener("DOMContentLoaded", () => {
+  const aiPopup = document.getElementById('ai-joke');
   const jokeText = document.getElementById('joke-text');
   const toggleBtn = document.getElementById('ai-toggle');
   const closeBtn = document.getElementById('ai-close');
   const newJokeBtn = document.getElementById('new-joke');
+  const jokeInput = document.getElementById('joke-input');
 
-  async function randomJoke() {
-    jokeText.textContent = "Compiling joke... 🤖";
+  if (!newJokeBtn || !jokeText) {
+    console.error("AI joke elements not found");
+    return;
+  }
+
+  toggleBtn.onclick = () => aiPopup.classList.toggle('hidden');
+  closeBtn.onclick = () => aiPopup.classList.add('hidden');
+
+  async function getJoke() {
+    const topic = jokeInput.value.trim() || "Programming";
+    jokeText.textContent = "Querying humor database… 🤖";
 
     try {
       const res = await fetch(
-        "https://official-joke-api.appspot.com/jokes/programming/random"
+        `https://v2.jokeapi.dev/joke/${encodeURIComponent(topic)}?type=single&safe-mode`
       );
-      const [data] = await res.json();
-      jokeText.textContent = `${data.setup} — ${data.punchline}`;
-    } catch {
+      const data = await res.json();
+
+      if (data.error || !data.joke) {
+        jokeText.textContent =
+          "No jokes found for that topic. Try Programming, Pun, or Dark.";
+        return;
+      }
+
+      jokeText.textContent = data.joke;
+    } catch (err) {
+      console.error(err);
       jokeText.textContent =
-        "Joke delivery failed. Please reboot sense of humor.";
+        "Network error. Humor uplink failed.";
     }
   }
 
-  toggleBtn.onclick = () => {
-    aiPopup.classList.toggle('hidden');
-    randomJoke();
-  };
+  newJokeBtn.addEventListener("click", getJoke);
 
-  closeBtn.onclick = () => aiPopup.classList.add('hidden');
+  jokeInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") getJoke();
+  });
 
-  newJokeBtn.onclick = randomJoke;
-
-  // Auto-open once
-  setTimeout(() => {
-    aiPopup.classList.remove('hidden');
-    randomJoke();
-  }, 5000);
+  // Optional auto-open
+  setTimeout(() => aiPopup.classList.remove('hidden'), 5000);
+});
 </script>
+
+
 
 
 </body>
