@@ -171,6 +171,29 @@
       Data fetched from GitHub (client-side only receives public repo meta). Cache updates every 5 minutes on server.
     </footer>
   </div>
+    <!-- AI Joke Assistant -->
+<div id="ai-joke"
+     class="fixed right-4 bottom-24 glow-border rounded-2xl p-4 w-72 hidden">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-sm neon font-semibold">AI Assistant</span>
+    <button id="ai-close" class="faint text-xs hover:accent">✕</button>
+  </div>
+
+  <p id="joke-text" class="faint text-sm leading-relaxed">
+    Initializing humor module...
+  </p>
+
+  <button id="new-joke"
+          class="mt-3 pill hover:brightness-125">
+    New joke
+  </button>
+</div>
+
+<!-- AI Toggle Button -->
+<button id="ai-toggle"
+        class="fixed right-4 bottom-6 pill glow-border hover:brightness-185">
+  🤖 AI
+</button>
 
   <script>
     async function loadRepos(){
@@ -211,5 +234,38 @@
 
     loadRepos();
   </script>
+  <script>
+  const jokes = [
+    "Why do programmers prefer dark mode? Because light attracts bugs.",
+    "I told my neural network a joke… it overfit.",
+    "Why was the JavaScript developer sad? Because they didn’t know how to 'null' their feelings.",
+    "I tried to learn recursion, but I tried to learn recursion.",
+    "AI humor level: statistically insignificant but emotionally adequate."
+  ];
+
+  const aiPopup = document.getElementById('ai-joke');
+  const jokeText = document.getElementById('joke-text');
+  const toggleBtn = document.getElementById('ai-toggle');
+  const closeBtn = document.getElementById('ai-close');
+  const newJokeBtn = document.getElementById('new-joke');
+
+  function randomJoke() {
+    jokeText.textContent = jokes[Math.floor(Math.random() * jokes.length)];
+  }
+
+  toggleBtn.onclick = () => {
+    aiPopup.classList.toggle('hidden');
+    randomJoke();
+  };
+
+  closeBtn.onclick = () => aiPopup.classList.add('hidden');
+  newJokeBtn.onclick = randomJoke;
+
+  setTimeout(() => {
+    aiPopup.classList.remove('hidden');
+    randomJoke();
+  }, 5000);
+</script>
+
 </body>
 </html>
